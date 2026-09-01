@@ -20,3 +20,18 @@ export async function uploadImage(
 
   return supabase.storage.from("media").getPublicUrl(path).data.publicUrl;
 }
+
+const PUBLIC_URL_MARKER = "/storage/v1/object/public/media/";
+
+export async function deleteImage(
+  supabase: SupabaseClient,
+  imageUrl: string | null,
+): Promise<void> {
+  if (!imageUrl) return;
+
+  const markerIndex = imageUrl.indexOf(PUBLIC_URL_MARKER);
+  if (markerIndex === -1) return;
+
+  const path = imageUrl.slice(markerIndex + PUBLIC_URL_MARKER.length);
+  await supabase.storage.from("media").remove([path]);
+}

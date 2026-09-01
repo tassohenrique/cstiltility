@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { uploadImage } from "@/lib/supabase/storage";
+import { deleteImage, uploadImage } from "@/lib/supabase/storage";
 
 function slugify(value: string): string {
   return value
@@ -42,8 +42,13 @@ export async function updateCourse(formData: FormData) {
     formData.get("cover_image") as File | null,
     "courses",
   );
-  const coverImageUrl =
-    uploadedUrl ?? (String(formData.get("existing_cover_image_url")) || null);
+  const existingCoverImageUrl =
+    String(formData.get("existing_cover_image_url")) || null;
+  const coverImageUrl = uploadedUrl ?? existingCoverImageUrl;
+
+  if (uploadedUrl && existingCoverImageUrl) {
+    await deleteImage(supabase, existingCoverImageUrl);
+  }
 
   await supabase
     .from("courses")
@@ -62,7 +67,17 @@ export async function deleteCourse(formData: FormData) {
   const supabase = await createClient();
   const id = String(formData.get("id"));
 
+  const { data: course } = await supabase
+    .from("courses")
+    .select("cover_image_url")
+    .eq("id", id)
+    .single();
+
   await supabase.from("courses").delete().eq("id", id);
+
+  if (course) {
+    await deleteImage(supabase, course.cover_image_url);
+  }
 
   revalidatePath("/admin/courses");
 }

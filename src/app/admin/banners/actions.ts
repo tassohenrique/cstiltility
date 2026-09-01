@@ -2,7 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
-import { uploadImage } from "@/lib/supabase/storage";
+import { deleteImage, uploadImage } from "@/lib/supabase/storage";
 
 export async function createBanner(formData: FormData) {
   const supabase = await createClient();
@@ -36,7 +36,12 @@ export async function updateBanner(formData: FormData) {
     formData.get("image") as File | null,
     "banners",
   );
-  const imageUrl = uploadedUrl ?? String(formData.get("existing_image_url"));
+  const existingImageUrl = String(formData.get("existing_image_url"));
+  const imageUrl = uploadedUrl ?? existingImageUrl;
+
+  if (uploadedUrl) {
+    await deleteImage(supabase, existingImageUrl);
+  }
 
   await supabase
     .from("banners")
@@ -57,7 +62,17 @@ export async function deleteBanner(formData: FormData) {
   const supabase = await createClient();
   const id = String(formData.get("id"));
 
+  const { data: banner } = await supabase
+    .from("banners")
+    .select("image_url")
+    .eq("id", id)
+    .single();
+
   await supabase.from("banners").delete().eq("id", id);
+
+  if (banner) {
+    await deleteImage(supabase, banner.image_url);
+  }
 
   revalidatePath("/admin/banners");
 }
