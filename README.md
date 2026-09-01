@@ -1,6 +1,17 @@
 # CSTiltility
 
+![Next.js](https://img.shields.io/badge/Next.js-App%20Router-000000?logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-styling-06B6D4?logo=tailwindcss&logoColor=white)
+![shadcn/ui](https://img.shields.io/badge/shadcn%2Fui-components-000000)
+![Supabase](https://img.shields.io/badge/Supabase-Postgres%20%2B%20Auth%20%2B%20Storage-3FCF8E?logo=supabase&logoColor=white)
+![Deploy](https://img.shields.io/badge/deploy-Vercel-000000?logo=vercel&logoColor=white)
+
 Plataforma de membros premium para ensinar line-ups de CS2 (smokes, flashes e HEs) mapa por mapa, com uma experiência de navegação estilo Netflix e acabamento visual inspirado na Apple.
+
+## Screenshot
+
+![Tela de login do CSTiltility](docs/screenshot.png)
 
 ## Status
 
