@@ -91,6 +91,7 @@ export default async function AdminCoursesPage() {
                       Salvar
                     </Button>
                     <Button
+                      type="submit"
                       formAction={deleteCourse}
                       size="sm"
                       variant="destructive"

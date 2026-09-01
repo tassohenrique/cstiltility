@@ -110,6 +110,7 @@ export default async function AdminBannersPage() {
                       Salvar
                     </Button>
                     <Button
+                      type="submit"
                       formAction={deleteBanner}
                       size="sm"
                       variant="destructive"

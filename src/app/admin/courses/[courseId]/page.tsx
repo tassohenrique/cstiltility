@@ -133,6 +133,7 @@ export default async function AdminCourseModulesPage({
                       Salvar
                     </Button>
                     <Button
+                      type="submit"
                       formAction={deleteModule}
                       size="sm"
                       variant="destructive"

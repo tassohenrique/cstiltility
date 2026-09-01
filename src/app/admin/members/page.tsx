@@ -121,6 +121,7 @@ export default async function AdminMembersPage() {
                       Salvar
                     </Button>
                     <Button
+                      type="submit"
                       formAction={deleteMember}
                       size="sm"
                       variant="destructive"

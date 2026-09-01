@@ -163,6 +163,7 @@ export default async function AdminModuleLessonsPage({
                       Salvar
                     </Button>
                     <Button
+                      type="submit"
                       formAction={deleteLesson}
                       size="sm"
                       variant="destructive"
