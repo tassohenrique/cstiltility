@@ -37,8 +37,15 @@ export default async function AdminBannersPage() {
           <Input id="title" name="title" required />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="image_url">Imagem (URL)</Label>
-          <Input id="image_url" name="image_url" required />
+          <Label htmlFor="image">Imagem</Label>
+          <input
+            id="image"
+            name="image"
+            type="file"
+            accept="image/*"
+            required
+            className="text-sm"
+          />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="cta_text">Texto do botão</Label>
@@ -69,6 +76,7 @@ export default async function AdminBannersPage() {
         <TableHeader>
           <TableRow>
             <TableHead>Título</TableHead>
+            <TableHead />
             <TableHead>Imagem</TableHead>
             <TableHead>Botão</TableHead>
             <TableHead>Link</TableHead>
@@ -80,17 +88,29 @@ export default async function AdminBannersPage() {
         <TableBody>
           {(banners ?? []).map((banner) => (
             <TableRow key={banner.id}>
-              <TableCell colSpan={7} className="p-0">
+              <TableCell colSpan={8} className="p-0">
                 <form
                   action={updateBanner}
-                  className="grid grid-cols-[1.5fr_2fr_1fr_1.5fr_4rem_3rem_auto] items-center gap-2 px-4 py-2"
+                  className="grid grid-cols-[1.5fr_3rem_2fr_1fr_1.5fr_4rem_3rem_auto] items-center gap-2 px-4 py-2"
                 >
                   <input type="hidden" name="id" value={banner.id} />
+                  <input
+                    type="hidden"
+                    name="existing_image_url"
+                    value={banner.image_url}
+                  />
                   <Input name="title" defaultValue={banner.title} required />
-                  <Input
-                    name="image_url"
-                    defaultValue={banner.image_url}
-                    required
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={banner.image_url}
+                    alt=""
+                    className="size-8 rounded object-cover"
+                  />
+                  <input
+                    name="image"
+                    type="file"
+                    accept="image/*"
+                    className="text-xs"
                   />
                   <Input name="cta_text" defaultValue={banner.cta_text ?? ""} />
                   <Input name="cta_link" defaultValue={banner.cta_link ?? ""} />
@@ -125,7 +145,7 @@ export default async function AdminBannersPage() {
           {(!banners || banners.length === 0) && (
             <TableRow>
               <TableCell
-                colSpan={7}
+                colSpan={8}
                 className="p-4 text-sm text-muted-foreground"
               >
                 Nenhum banner cadastrado ainda.

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { uploadImage } from "@/lib/supabase/storage";
 
 function slugify(value: string): string {
   return value
@@ -16,11 +17,16 @@ function slugify(value: string): string {
 export async function createCourse(formData: FormData) {
   const supabase = await createClient();
   const title = String(formData.get("title") ?? "").trim();
+  const coverImageUrl = await uploadImage(
+    supabase,
+    formData.get("cover_image") as File | null,
+    "courses",
+  );
 
   await supabase.from("courses").insert({
     title,
     slug: slugify(title),
-    cover_image_url: String(formData.get("cover_image_url") ?? "") || null,
+    cover_image_url: coverImageUrl,
     order: Number(formData.get("order") ?? 0),
   });
 
@@ -31,13 +37,20 @@ export async function updateCourse(formData: FormData) {
   const supabase = await createClient();
   const id = String(formData.get("id"));
   const title = String(formData.get("title") ?? "").trim();
+  const uploadedUrl = await uploadImage(
+    supabase,
+    formData.get("cover_image") as File | null,
+    "courses",
+  );
+  const coverImageUrl =
+    uploadedUrl ?? (String(formData.get("existing_cover_image_url")) || null);
 
   await supabase
     .from("courses")
     .update({
       title,
       slug: slugify(title),
-      cover_image_url: String(formData.get("cover_image_url") ?? "") || null,
+      cover_image_url: coverImageUrl,
       order: Number(formData.get("order") ?? 0),
     })
     .eq("id", id);

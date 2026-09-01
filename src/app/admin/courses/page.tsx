@@ -38,8 +38,14 @@ export default async function AdminCoursesPage() {
           <Input id="title" name="title" required placeholder="Mirage" />
         </div>
         <div className="flex flex-col gap-1.5">
-          <Label htmlFor="cover_image_url">Capa (URL)</Label>
-          <Input id="cover_image_url" name="cover_image_url" />
+          <Label htmlFor="cover_image">Capa</Label>
+          <input
+            id="cover_image"
+            name="cover_image"
+            type="file"
+            accept="image/*"
+            className="text-sm"
+          />
         </div>
         <div className="flex flex-col gap-1.5">
           <Label htmlFor="order">Ordem</Label>
@@ -59,7 +65,8 @@ export default async function AdminCoursesPage() {
           <TableRow>
             <TableHead>Título</TableHead>
             <TableHead>Slug</TableHead>
-            <TableHead>Capa (URL)</TableHead>
+            <TableHead />
+            <TableHead>Capa</TableHead>
             <TableHead>Ordem</TableHead>
             <TableHead />
           </TableRow>
@@ -67,19 +74,36 @@ export default async function AdminCoursesPage() {
         <TableBody>
           {(courses ?? []).map((course) => (
             <TableRow key={course.id}>
-              <TableCell colSpan={5} className="p-0">
+              <TableCell colSpan={6} className="p-0">
                 <form
                   action={updateCourse}
-                  className="grid grid-cols-[2fr_1fr_2fr_5rem_auto] items-center gap-2 px-4 py-2"
+                  className="grid grid-cols-[2fr_1fr_3rem_2fr_5rem_auto] items-center gap-2 px-4 py-2"
                 >
                   <input type="hidden" name="id" value={course.id} />
+                  <input
+                    type="hidden"
+                    name="existing_cover_image_url"
+                    value={course.cover_image_url ?? ""}
+                  />
                   <Input name="title" defaultValue={course.title} required />
                   <span className="text-sm text-muted-foreground">
                     {course.slug}
                   </span>
-                  <Input
-                    name="cover_image_url"
-                    defaultValue={course.cover_image_url ?? ""}
+                  {course.cover_image_url ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={course.cover_image_url}
+                      alt=""
+                      className="size-8 rounded object-cover"
+                    />
+                  ) : (
+                    <span />
+                  )}
+                  <input
+                    name="cover_image"
+                    type="file"
+                    accept="image/*"
+                    className="text-xs"
                   />
                   <Input
                     name="order"
@@ -115,7 +139,7 @@ export default async function AdminCoursesPage() {
           {(!courses || courses.length === 0) && (
             <TableRow>
               <TableCell
-                colSpan={5}
+                colSpan={6}
                 className="p-4 text-sm text-muted-foreground"
               >
                 Nenhum mapa cadastrado ainda.
