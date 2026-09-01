@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CSTiltility
 
-## Getting Started
+Plataforma de membros premium para ensinar line-ups de CS2 (smokes, flashes e HEs) mapa por mapa, com uma experiência de navegação estilo Netflix e acabamento visual inspirado na Apple.
 
-First, run the development server:
+## Status
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+**MVP sem cobrança.** O acesso é liberado manualmente pelo admin — não há checkout implementado ainda. A camada de acesso foi projetada para plugar um provedor de pagamento (ex: Stripe) depois, sem refatoração grande.
+
+## Stack
+
+- [Next.js](https://nextjs.org) (App Router) + TypeScript em modo estrito
+- Tailwind CSS + [shadcn/ui](https://ui.shadcn.com)
+- [Supabase](https://supabase.com): Postgres, Auth e Storage
+- Deploy: Vercel
+- Vídeo: embed do YouTube via iframe
+
+## Estrutura de conteúdo
+
+```
+Course (Mapa: Mirage, Inferno, Dust2...)
+  └─ Module (tipo de granada: smoke | flash | he | molotov)
+       └─ Lesson (line-up específica)
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Cada aula tem vídeo do YouTube, descrição/dificuldade e um campo de notas do aluno com autosave.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Papéis de usuário
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **admin**: CRUD de conteúdo, gestão de membros e do banner da home
+- **member**: acesso à área de membros, aulas liberadas, notas e progresso
 
-## Learn More
+Controle de acesso via Row Level Security (RLS) no Supabase, não apenas na UI. Rotas `/admin/*` protegidas por middleware.
 
-To learn more about Next.js, take a look at the following resources:
+## Rodando localmente
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+npm install
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Copie `.env.local.example` para `.env.local` e preencha as credenciais do Supabase antes de rodar.
 
-## Deploy on Vercel
+Abra [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Comandos
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `npm run dev` — ambiente local
+- `npm run build` — build de produção
+- `npm run lint` — checagem de lint
+
+## O que não está implementado (de propósito)
+
+- Checkout/pagamento
+- Quiz builder
+- Upload/hospedagem própria de vídeo
+
+Mais detalhes de convenções e modelo de dados em [CLAUDE.md](./CLAUDE.md).
